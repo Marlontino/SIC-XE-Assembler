@@ -80,7 +80,7 @@ void pass2(const string& moduleName) {
             if (!type4) {
                 // Type 3 instruction
                 // Instruction with opcode found in OPTAB
-                string opcode = OPTAB[info.opcode];
+                string opcode = OPTAB[info.opcode].first;
                 int disp = 0;   // Default displacement
                 
                 if (info.opcode == "RSUB") {
@@ -120,7 +120,7 @@ void pass2(const string& moduleName) {
 
             } else {
                 // Type 4 instruction
-                string opcode = OPTAB[info.opcode.substr(1)]; // Ignore "+"
+                string opcode = OPTAB[info.opcode.substr(1)].first; // Ignore "+"
                 string e_flag = "1";
                 // Check addressing mode
                 if (info.operand[0] == '#') {

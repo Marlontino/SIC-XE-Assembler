@@ -19,7 +19,7 @@ struct LineInfo {
 extern map<string, int> SYMTAB;
 
 // Declaration of OPTAB (defined externally in another source file)
-extern std::map<std::string, std::string> OPTAB;
+extern std::map<std::string, std::pair<std::string, int> > OPTAB;
 
 // Function declarations for pass1
 void pass1(const string& filename, const string& moduleName);
