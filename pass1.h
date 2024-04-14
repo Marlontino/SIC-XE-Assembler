@@ -18,7 +18,7 @@ struct LineInfo {
 // Symbol table map (label -> address)
 extern map<string, int> SYMTAB;
 
-// Literal table map (label -> address)
+// Literal table map (literal -> address)
 extern map<string, int> LITTAB;
 
 // Declaration of OPTAB (defined externally in another source file)

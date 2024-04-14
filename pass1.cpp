@@ -12,6 +12,8 @@
 using namespace std;
 
 std::map<std::string, int> SYMTAB;
+std::map<std::string, int> LITTAB;
+
 
 // Pass 1 function to process the input file and build the symbol table
 void pass1(const string& filename, const string& moduleName) {
@@ -82,9 +84,10 @@ void pass1(const string& filename, const string& moduleName) {
                  baseRegister = info.opcode;
             } else if (info.label == "*") {
                 // Update LITTAB
-                // Extract constant from operand (e.g., =X'05', =C'HELLO')
+                // Extract constant from opcode (e.g., =X'05', =C'HELLO')
                 string literal = info.opcode.substr(3, info.opcode.size() - 4);
-                locctr += literal.size();     
+                LITTAB[literal] = locctr;
+                locctr += literal.size();
                 continue; 
             } else {
                 // Add label to SYMTAB with current locctr

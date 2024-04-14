@@ -143,15 +143,16 @@ void pass2(const string& moduleName) {
                 
                 // Format output
                 stringstream hexStream;
-                if (info.operand=="=C'EOF'") {  // Handle literal
-                    hexStream << hex << uppercase << setw(5) << setfill('0') << SYMTAB["*"];
+                string literal = info.operand.substr(3, info.operand.size() - 4);
+                if (LITTAB.find(literal) != LITTAB.end()) {  // Handle literal
+                    hexStream << hex << uppercase << setw(5) << setfill('0') << LITTAB[literal];
                     displacement = hexStream.str();
                     outputFile << line +  "\t";
-                } else if (isInteger(info.operand)){
+                } else if (isInteger(info.operand)){ // Handle integer
                     displacement = info.operand;
                     hexStream << hex << uppercase << setw(5) << setfill('0') << displacement;
                     outputFile << line;
-                } else {
+                } else { // Handle label
                     hexStream << hex << uppercase << setw(5) << setfill('0') << SYMTAB[info.operand];
                     outputFile << line;
                 }
