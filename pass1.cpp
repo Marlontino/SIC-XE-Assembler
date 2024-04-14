@@ -68,6 +68,8 @@ void pass1(const string& filename, const string& moduleName) {
             info.label.clear();
         }
 
+
+
         // Update SYMTAB
         if (!info.label.empty()) {
             // Check if label is already in SYMTAB (duplicate symbol error)
@@ -78,6 +80,12 @@ void pass1(const string& filename, const string& moduleName) {
             // Update base register
             if (info.label == "BASE") {
                  baseRegister = info.opcode;
+            } else if (info.label == "*") {
+                // Update LITTAB
+                // Extract constant from operand (e.g., =X'05', =C'HELLO')
+                string literal = info.opcode.substr(3, info.opcode.size() - 4);
+                locctr += literal.size();     
+                continue; 
             } else {
                 // Add label to SYMTAB with current locctr
                 SYMTAB[info.label] = locctr;
@@ -89,8 +97,9 @@ void pass1(const string& filename, const string& moduleName) {
         // Increment locctr based on opcode and operand
         if (info.opcode == "START") {
             // Set starting address from operand
+            
             locctr = stoi(info.operand, nullptr, 16); // Assuming operand is in hex
-        } else if (info.opcode == "END") {
+        } else if (info.label == "END") {
             // End of program
             break;
         } else if (info.opcode == "BYTE") {
@@ -122,10 +131,12 @@ void pass1(const string& filename, const string& moduleName) {
         } else if (info.label == "BASE") {
             // Locctr stays the same
             continue;
-        }
+        } 
         else {
-            // Increment locctr by default instruction length (assuming standard instruction)
-            locctr += 3; // Assuming standard instruction length in bytes
+            // Increment locctr by instruction length    
+            int size = OPTAB[info.opcode].second;
+            // Accessing OPTAB
+            locctr += size; // Assuming standard instruction length in bytes
         }     
     }
     // Upadate base register's address

@@ -18,6 +18,9 @@ struct LineInfo {
 // Symbol table map (label -> address)
 extern map<string, int> SYMTAB;
 
+// Literal table map (label -> address)
+extern map<string, int> LITTAB;
+
 // Declaration of OPTAB (defined externally in another source file)
 extern std::map<std::string, std::pair<std::string, int> > OPTAB;
 
