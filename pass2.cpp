@@ -163,11 +163,13 @@ void pass2(const string& moduleName) {
             }
             
         } else if (info.opcode == "BYTE" || info.opcode == "WORD" || info.label == "*") {
+            // Format object code
+            outputFile << line;
             // Check if opcode is a literal
             if (info.label == "*") {  
                 info.operand = info.opcode.substr(1);   
                 info.opcode = "BYTE";
-                outputFile << line + "\t\t\t"; // Format object code
+                outputFile << "\t\t\t"; 
             } 
             
             // Handle BYTE and WORD directives (generate object code based on operand)
