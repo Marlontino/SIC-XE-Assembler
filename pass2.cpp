@@ -114,9 +114,8 @@ void pass2(const string& moduleName) {
                 outputFile << line + "\t\t" + OPTAB[info.opcode].first + MNEMONICTAB[r1] + "0" << endl;
             }
             
-
-
-        }    else if (OPTAB.find(info.opcode) != OPTAB.end() || type4) {
+        }   else if (OPTAB.find(info.opcode) != OPTAB.end() || type4) {
+            // Type 3 and 4 instructions
             // Set flags and addresses
             string displacement = "";
             string targetAddress = "000";
@@ -164,7 +163,8 @@ void pass2(const string& moduleName) {
                     if (!isInteger(info.operand)) {
                         disp = calculateDisplacement(info.operand, current_Loc, bp_flag);
                     } else {
-                        disp = stoi(info.operand, nullptr, 16);
+                        disp = stoi(info.operand);
+                        cout << "hi";
                     }                    
                 }
                 // Construct object code
@@ -179,6 +179,7 @@ void pass2(const string& moduleName) {
                 // Type 4 instruction
                 string opcode = OPTAB[info.opcode.substr(1)].first; // Ignore "+"
                 string e_flag = "1";
+                int disp;
                 // Check addressing mode
                 if (info.operand[0] == '#') {
                     // Immediate addressing mode
@@ -188,7 +189,7 @@ void pass2(const string& moduleName) {
                 } else if (info.operand[0] == '@') {
                     //Indirect addressing mode
                     ni_flag = "10";
-                    info.operand = info.operand.substr(1);
+                    info.operand = info.operand.substr(1); // Ignore "@"
                 } else {
                     // Direct addressing mode
                     ni_flag = "11";
@@ -206,8 +207,8 @@ void pass2(const string& moduleName) {
                     displacement = hexStream.str();
                     outputFile << line +  "\t";
                 } else if (isInteger(info.operand)){ // Handle integer
-                    displacement = info.operand;
-                    hexStream << hex << uppercase << setw(5) << setfill('0') << displacement;
+                    disp = stoi(info.operand);
+                    hexStream << hex << uppercase << setw(5) << setfill('0') << disp;
                     outputFile << line;
                 } else { // Handle label
                     hexStream << hex << uppercase << setw(5) << setfill('0') << SYMTAB[info.operand];
