@@ -46,7 +46,7 @@ WLOOP     TD      OUTPUT
           JEQ     WLOOP
           LDCH    BUFFER,X
           WD      OUTPUT
-          TIXR    TABLE
+          TIXR    T
           JLT     WLOOP
           RSUB
 OUTPUT    BYTE    X'05'                    

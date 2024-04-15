@@ -59,7 +59,64 @@ void pass2(const string& moduleName) {
             // No object code to add
             outputFile << line  << endl;
 
-        } else if (OPTAB.find(info.opcode) != OPTAB.end() || type4) {
+        }  else if (info.opcode == "BYTE" || info.opcode == "WORD" || info.label == "*") {
+            // Handle literals
+            // Format object code
+            outputFile << line;
+            // Check if opcode is a literal
+            if (info.label == "*") {  
+                info.operand = info.opcode.substr(1);   
+                info.opcode = "BYTE";
+                outputFile << "\t\t\t"; 
+            } 
+            
+            // Handle BYTE and WORD directives (generate object code based on operand)
+            if (info.opcode == "BYTE") {
+                // Extract constant from operand (e.g., X'05', C'HELLO')
+                string constant = info.operand.substr(2, info.operand.size() - 3);
+                if (info.operand[0] == 'X') {
+                    // Hexadecimal constant
+                    info.objectCode = constant;
+                } else if (info.operand[0] == 'C') {
+                    // Character constant (convert characters to ASCII hex values)
+                    stringstream ss;
+                    for (char& c : constant) {
+                        ss << uppercase << hex << int(c);
+                    }
+                    info.objectCode = ss.str();
+                }
+                
+            } else if (info.opcode == "WORD") {
+                // Integer constant (convert to 6-digit hexadecimal)
+                int value = stoi(info.operand);
+                info.objectCode = to_string(value);
+            }
+            // Write to listing file
+            outputFile << "\t\t" + info.objectCode << endl; // Format object code
+
+        } else if (OPTAB[info.opcode].second == 1) {
+            // Type 1 instruction
+            outputFile << line + "\t\t" << hex << OPTAB[info.opcode].first;
+        
+        } else if (OPTAB[info.opcode].second == 2) {
+            // Type 2 instruction
+            string r1;
+            string r2;
+            // Parse operand
+            size_t comma = info.operand.find(",");
+            if (comma != string::npos){
+                r1 = info.operand.substr(0,comma);
+                r2 = info.operand.substr(comma+1);
+                outputFile << line + "\t\t" + OPTAB[info.opcode].first + MNEMONICTAB[r1] + MNEMONICTAB[r2] << endl;
+            } else {
+                r1 = info.operand;
+                r2 = "0";
+                outputFile << line + "\t\t" + OPTAB[info.opcode].first + MNEMONICTAB[r1] + "0" << endl;
+            }
+            
+
+
+        }    else if (OPTAB.find(info.opcode) != OPTAB.end() || type4) {
             // Set flags and addresses
             string displacement = "";
             string targetAddress = "000";
@@ -162,40 +219,6 @@ void pass2(const string& moduleName) {
 
             }
             
-        } else if (info.opcode == "BYTE" || info.opcode == "WORD" || info.label == "*") {
-            // Format object code
-            outputFile << line;
-            // Check if opcode is a literal
-            if (info.label == "*") {  
-                info.operand = info.opcode.substr(1);   
-                info.opcode = "BYTE";
-                outputFile << "\t\t\t"; 
-            } 
-            
-            // Handle BYTE and WORD directives (generate object code based on operand)
-            if (info.opcode == "BYTE") {
-                // Extract constant from operand (e.g., X'05', C'HELLO')
-                string constant = info.operand.substr(2, info.operand.size() - 3);
-                if (info.operand[0] == 'X') {
-                    // Hexadecimal constant
-                    info.objectCode = constant;
-                } else if (info.operand[0] == 'C') {
-                    // Character constant (convert characters to ASCII hex values)
-                    stringstream ss;
-                    for (char& c : constant) {
-                        ss << uppercase << hex << int(c);
-                    }
-                    info.objectCode = ss.str();
-                }
-                
-            } else if (info.opcode == "WORD") {
-                // Integer constant (convert to 6-digit hexadecimal)
-                int value = stoi(info.operand);
-                info.objectCode = to_string(value);
-            }
-            // Write to listing file
-            outputFile << "\t\t" + info.objectCode << endl; // Format object code
-
         } else {
             // Invalid opcode
             cerr << "Error: Invalid opcode '" << info.opcode << "' found" << current_Loc << endl;

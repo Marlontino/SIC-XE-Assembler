@@ -13,6 +13,8 @@ using namespace std;
 
 std::map<std::string, int> SYMTAB;
 std::map<std::string, int> LITTAB;
+std::map<std::string, std::string> MNEMONICTAB;
+
 
 
 // Pass 1 function to process the input file and build the symbol table
@@ -43,6 +45,7 @@ void pass1(const string& filename, const string& moduleName) {
 
     // Initialize OPTAB
     initializeOPTAB();
+    initializeMNEMONICTAB();
 
     // Process sic file
     string line;
@@ -69,8 +72,6 @@ void pass1(const string& filename, const string& moduleName) {
             info.opcode = info.label;
             info.label.clear();
         }
-
-
 
         // Update SYMTAB
         if (!info.label.empty()) {

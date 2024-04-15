@@ -79,5 +79,27 @@ void initializeOPTAB() {
 	OPTAB.insert(std::make_pair("TIX", std::make_pair("2C", 3)));
 	OPTAB.insert(std::make_pair("TIXR", std::make_pair("B8", 2)));
 	OPTAB.insert(std::make_pair("WD", std::make_pair("DC", 3)));
+	// Mnemonics
+	OPTAB.insert(std::make_pair("A", std::make_pair("0", -1)));
+	OPTAB.insert(std::make_pair("X", std::make_pair("1", -1)));
+	OPTAB.insert(std::make_pair("L", std::make_pair("2", -1)));
+	OPTAB.insert(std::make_pair("B", std::make_pair("3", -1)));
+	OPTAB.insert(std::make_pair("S", std::make_pair("4", -1)));
+	OPTAB.insert(std::make_pair("T", std::make_pair("5", -1)));
+	OPTAB.insert(std::make_pair("F", std::make_pair("6", -1)));
+	OPTAB.insert(std::make_pair("PC", std::make_pair("8", -1)));
+	OPTAB.insert(std::make_pair("SW", std::make_pair("9", -1)));
 
+}
+
+void initializeMNEMONICTAB () {
+    MNEMONICTAB.insert(std::make_pair("A","0"));
+    MNEMONICTAB.insert(std::make_pair("X","1"));
+    MNEMONICTAB.insert(std::make_pair("L","2"));
+    MNEMONICTAB.insert(std::make_pair("B","3"));
+    MNEMONICTAB.insert(std::make_pair("S","4"));
+    MNEMONICTAB.insert(std::make_pair("T","5"));
+    MNEMONICTAB.insert(std::make_pair("F","6"));
+    MNEMONICTAB.insert(std::make_pair("PC","8"));
+    MNEMONICTAB.insert(std::make_pair("SW","9"));
 }
