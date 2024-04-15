@@ -62,12 +62,11 @@ void pass2(const string& moduleName) {
         }  else if (info.opcode == "BYTE" || info.opcode == "WORD" || info.label == "*") {
             // Handle literals
             // Format object code
-            outputFile << line;
+            outputFile  << setw(40) << left << line;
             // Check if opcode is a literal
             if (info.label == "*") {  
                 info.operand = info.opcode.substr(1);   
                 info.opcode = "BYTE";
-                outputFile << "\t\t\t"; 
             } 
             
             // Handle BYTE and WORD directives (generate object code based on operand)
@@ -92,11 +91,11 @@ void pass2(const string& moduleName) {
                 info.objectCode = to_string(value);
             }
             // Write to listing file
-            outputFile << "\t\t" + info.objectCode << endl; // Format object code
+            outputFile << info.objectCode << endl; // Format object code
 
         } else if (OPTAB[info.opcode].second == 1) {
             // Type 1 instruction
-            outputFile << line + "\t\t" << hex << OPTAB[info.opcode].first;
+            outputFile << setw(40) << left << line << hex << OPTAB[info.opcode].first;
         
         } else if (OPTAB[info.opcode].second == 2) {
             // Type 2 instruction
@@ -107,11 +106,11 @@ void pass2(const string& moduleName) {
             if (comma != string::npos){
                 r1 = info.operand.substr(0,comma);
                 r2 = info.operand.substr(comma+1);
-                outputFile << line + "\t\t" + OPTAB[info.opcode].first + MNEMONICTAB[r1] + MNEMONICTAB[r2] << endl;
+                outputFile << setw(40) << left << line << OPTAB[info.opcode].first + MNEMONICTAB[r1] + MNEMONICTAB[r2] << endl;
             } else {
                 r1 = info.operand;
                 r2 = "0";
-                outputFile << line + "\t\t" + OPTAB[info.opcode].first + MNEMONICTAB[r1] + "0" << endl;
+                outputFile << setw(40) << left << line << OPTAB[info.opcode].first + MNEMONICTAB[r1] + "0" << endl;
             }
             
         }   else if (OPTAB.find(info.opcode) != OPTAB.end() || type4) {
@@ -164,7 +163,6 @@ void pass2(const string& moduleName) {
                         disp = calculateDisplacement(info.operand, current_Loc, bp_flag);
                     } else {
                         disp = stoi(info.operand);
-                        cout << "hi";
                     }                    
                 }
                 // Construct object code
@@ -173,7 +171,7 @@ void pass2(const string& moduleName) {
                 hexStream << hex << uppercase << setw(3) << setfill('0') << disp;
                 displacement = hexStream.str();
                 info.objectCode = binaryToHex(info.objectCode) + displacement;
-                outputFile << line +  "\t\t" + info.objectCode << endl;
+                outputFile << setw(40) << left << line << info.objectCode << endl;
 
             } else {
                 // Type 4 instruction
@@ -205,18 +203,18 @@ void pass2(const string& moduleName) {
                 if (LITTAB.find(literal) != LITTAB.end()) {  // Handle literal
                     hexStream << hex << uppercase << setw(5) << setfill('0') << LITTAB[literal];
                     displacement = hexStream.str();
-                    outputFile << line +  "\t";
+                    outputFile << setw(40) << left << line;
                 } else if (isInteger(info.operand)){ // Handle integer
                     disp = stoi(info.operand);
                     hexStream << hex << uppercase << setw(5) << setfill('0') << disp;
-                    outputFile << line;
+                    outputFile << setw(40) << left << line;
                 } else { // Handle label
                     hexStream << hex << uppercase << setw(5) << setfill('0') << SYMTAB[info.operand];
-                    outputFile << line;
+                    outputFile << setw(40) << left << line;
                 }
                 
                 displacement = hexStream.str();
-                outputFile << "\t\t" + info.objectCode + displacement << endl;
+                outputFile << info.objectCode + displacement << endl;
 
             }
             
