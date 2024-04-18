@@ -1,3 +1,7 @@
+// Niko Perry, cssc4023
+// Sabrina Lee, cssc4015
+// CS 530, Spring 2024
+// Assignment 2, Assembler
 // pass2.cpp
 
 #include "pass2.h"
@@ -292,7 +296,7 @@ int calculateDisplacement(const string& hexString, const string& locctr, string&
     }
     // Prepare negative decimal to convert to base relative hex
     if (disp < 0){
-        disp = 4095 + disp;
+        disp = 4096 + disp;
     }
     return disp;  
 }

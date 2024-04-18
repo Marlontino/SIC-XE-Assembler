@@ -1,3 +1,7 @@
+// Niko Perry, cssc4023
+// Sabrina Lee, cssc4015
+// CS 530, Spring 2024
+// Assignment 2, Assembler
 // pass1.cpp
 
 #include "pass1.h"
@@ -20,6 +24,7 @@ std::map<std::string, std::string> MNEMONICTAB;
 // Pass 1 function to process the input file and build the symbol table
 void pass1(const string& filename, const string& moduleName) {
     SYMTAB.clear(); // Reset SYMTAB
+    LITTAB.clear();
     // Open file
     ifstream inputFile(filename);
     if (!inputFile.is_open()) {
@@ -36,12 +41,18 @@ void pass1(const string& filename, const string& moduleName) {
     }
 
     // Create .st output file
-    string symbolTableFilename = moduleName + ".st";
-    ofstream symbolTableFile(symbolTableFilename);
-    if (!symbolTableFile) {
-        cerr << "Error: Failed to create the symbol table file." << endl;
+    std::string symbolTableFilename = moduleName + ".st";
+    std::ofstream symbolTableFile(symbolTableFilename);
+    if (!symbolTableFile.is_open()) {
+        std::cerr << "Error: Failed to create the symbol table file." << std::endl;
         return;
     }
+
+    // Create SYMTAB header
+    symbolTableFile << "Symbol Table" << endl;
+    symbolTableFile << setw(10) << left << "Name";
+    symbolTableFile << setw(10) << left << "Value" << endl;
+    symbolTableFile << string(20, '-') << endl;
 
     // Initialize OPTAB
     initializeOPTAB();
@@ -94,7 +105,8 @@ void pass1(const string& filename, const string& moduleName) {
                 // Add label to SYMTAB with current locctr
                 SYMTAB[info.label] = locctr;
                 // Write label to SYMTAB file
-                symbolTableFile << info.label << "\t" << hex << uppercase << setfill('0') << setw(4) << locctr << endl;
+                symbolTableFile << setfill(' ') << setw(10) << left << info.label;
+                symbolTableFile << setfill(' ') << setw(10) << left << hex << uppercase << setfill('0') << setw(4) << locctr << endl;
             }
         }
 
@@ -145,6 +157,27 @@ void pass1(const string& filename, const string& moduleName) {
     }
     // Upadate base register's address
     SYMTAB["BASE"] = SYMTAB[baseRegister];
+
+    // Add LITTAB to .st
+    symbolTableFile << "\nLiteral Table" << endl;
+    symbolTableFile << setfill(' ') << setw(10) << left << "Name";
+    symbolTableFile << setfill(' ') << setw(10) << left << "Operand";
+    symbolTableFile << setfill(' ') << setw(10) << left << "Address";
+    symbolTableFile << setfill(' ') << setw(10) << left << "Length" << endl;
+    symbolTableFile << string(40, '-') << endl;
+
+    // Character constant (convert characters to ASCII hex values)
+    
+    for (const auto& entry : LITTAB) {
+        stringstream ss;
+        for (const char& c : entry.first) {
+            ss << uppercase << hex << int(c);
+        }
+        symbolTableFile << setfill(' ') << setw(10) << left << entry.first;
+        symbolTableFile << setfill(' ') << setw(10) << left << ss.str();
+        symbolTableFile << setfill(' ') << setw(10) << left << entry.second;
+        symbolTableFile << setfill(' ') << setw(10) << left << entry.first.length() << endl;
+    }
 
     // Close input and output files
     inputFile.close();
