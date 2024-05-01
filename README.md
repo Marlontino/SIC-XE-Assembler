@@ -1,26 +1,24 @@
-## Niko Perry, cssc4023
-## Sabrina Lee, cssc4015
-## CS 530, Spring 2024
-## Assignment 2, Assembler
-## README
+# Limited SIC/XE Assembler
+### Niko Perry
 
 ## File Manifest
-   - pass1.h
-   - pass1.cpp
-   - pass2.h
-   - pass2.cpp
-   - optab.cpp
-   - asxe.cpp
-   - Makefile
-   - README
+  - pass1.h
+  - pass1.cpp
+  - pass2.h
+  - pass2.cpp
+  - optab.cpp
+  - asxe.cpp
+  - Makefile
+  - README
 
 ## Compile Instructions
-    Use "make" to compile project
-    Use "./scanner <filename.txt>" to run program
-    Use "make clean" to remove all files created during compilation
+  - Use "make" to compile project
+  - Use "./scanner <filename.txt>" to run program
+  - Use "make clean" to remove all files created during compilation
 
 ## Operating Instructions
   - The compiled program expects the input file name as a command-line argument.
+  - There can be multiple input files
 
 ## Novel/Significant Design Decisions
   - Use of maps (SYMTAB, LITTAB, MNEMONICTAB, OPTAB) for symbol, literal, mnemonic, and opcode information.
